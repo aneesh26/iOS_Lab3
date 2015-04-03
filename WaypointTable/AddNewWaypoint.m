@@ -24,6 +24,8 @@
 
 #import "AddNewWaypoint.h"
 #import "Waypoint.h"
+#import "WpProxy.h"
+
 @interface AddNewWaypoint ()
 @property (weak, nonatomic) IBOutlet UITextField *addLat;
 @property (weak, nonatomic) IBOutlet UITextField *addLon;
@@ -91,6 +93,30 @@
     
    [self.wpLib setObject:newWP forKey:newWP.name];
     
+        
+        // ------adding a new waypoint here
+        
+        WpProxy * wpP = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
+        
+        
+        [wpP ]
+        
+        double left = [self.leftTF.text doubleValue];
+        double right = [self.rightTF.text doubleValue];
+        NSString*oper = self.methodTF.text;
+        if([@"add" isEqualToString:oper]){
+            [calc add: left to: right];
+        }else if([@"subtract" isEqualToString:oper]){
+            [calc subtract: left by: right];
+        }else if([@"multiply" isEqualToString:oper]){
+            [calc multiply: left times: right];
+        }else if([@"divide" isEqualToString:oper]){
+            [calc divide: left by: right];
+        }
+        
+        
+        
+        //-----end of call
     
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"New Waypoint" message:[NSString stringWithFormat:@"Waypoint '%@' added",self.addName.text] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     alert.alertViewStyle = UIAlertViewStyleDefault;

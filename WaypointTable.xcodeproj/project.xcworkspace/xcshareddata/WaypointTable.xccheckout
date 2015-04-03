@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>E13CDA6F-2C7C-4AE9-83FB-CE785C50CEBA</string>
+	<key>IDESourceControlProjectName</key>
+	<string>WaypointTable</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>727094CFC994577157C1EB3FFF9816FD53CFDC7D</key>
+		<string>https://gmail.com@github.com/aneesh26/iOS_Lab3</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>WaypointTable.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>727094CFC994577157C1EB3FFF9816FD53CFDC7D</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://gmail.com@github.com/aneesh26/iOS_Lab3</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>727094CFC994577157C1EB3FFF9816FD53CFDC7D</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>727094CFC994577157C1EB3FFF9816FD53CFDC7D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>iOS_Lab3</string>
+		</dict>
+	</array>
+</dict>
+</plist>

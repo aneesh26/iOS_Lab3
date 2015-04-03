@@ -18,6 +18,7 @@
 		DD1A291B1AC922DF00C76417 /* WaypointTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1A291A1AC922DF00C76417 /* WaypointTableViewController.m */; };
 		DD1A291E1AC9343600C76417 /* WaypointLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1A291D1AC9343600C76417 /* WaypointLibrary.m */; };
 		DD1A29211AC94EB500C76417 /* AddNewWaypoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1A29201AC94EB500C76417 /* AddNewWaypoint.m */; };
+		DD8092C71ACE70A400632C93 /* WpProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8092C61ACE70A400632C93 /* WpProxy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,8 @@
 		DD1A291D1AC9343600C76417 /* WaypointLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaypointLibrary.m; sourceTree = "<group>"; };
 		DD1A291F1AC94EB500C76417 /* AddNewWaypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddNewWaypoint.h; sourceTree = "<group>"; };
 		DD1A29201AC94EB500C76417 /* AddNewWaypoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddNewWaypoint.m; sourceTree = "<group>"; };
+		DD8092C51ACE70A400632C93 /* WpProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WpProxy.h; sourceTree = "<group>"; };
+		DD8092C61ACE70A400632C93 /* WpProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WpProxy.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +112,8 @@
 				DD1A291D1AC9343600C76417 /* WaypointLibrary.m */,
 				DD1A291F1AC94EB500C76417 /* AddNewWaypoint.h */,
 				DD1A29201AC94EB500C76417 /* AddNewWaypoint.m */,
+				DD8092C51ACE70A400632C93 /* WpProxy.h */,
+				DD8092C61ACE70A400632C93 /* WpProxy.m */,
 			);
 			path = WaypointTable;
 			sourceTree = "<group>";
@@ -244,6 +249,7 @@
 				DD1A291E1AC9343600C76417 /* WaypointLibrary.m in Sources */,
 				DD1A28F91AC9195300C76417 /* ViewController.m in Sources */,
 				DD1A28F61AC9195300C76417 /* AppDelegate.m in Sources */,
+				DD8092C71ACE70A400632C93 /* WpProxy.m in Sources */,
 				DD1A28F31AC9195300C76417 /* main.m in Sources */,
 				DD1A29211AC94EB500C76417 /* AddNewWaypoint.m in Sources */,
 			);
@@ -438,6 +444,7 @@
 				DD1A29121AC9195300C76417 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DD1A29131AC9195300C76417 /* Build configuration list for PBXNativeTarget "WaypointTableTests" */ = {
 			isa = XCConfigurationList;
@@ -446,6 +453,7 @@
 				DD1A29151AC9195300C76417 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
