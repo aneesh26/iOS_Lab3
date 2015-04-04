@@ -84,17 +84,19 @@
 
 - (NSData *) toJson{
    
-    NSNumber * ID = [NSNumber numberWithInt:1];
+ //   NSNumber * ID = [NSNumber numberWithInt:1];
     
-    NSArray * parms = @[[NSNumber numberWithDouble:self.lat], [NSNumber numberWithDouble:self.lon], [NSString stringWithString:self.name], [NSString stringWithString:self.address], [NSString stringWithString:self.category]];
+  //  NSArray * parms = @[[NSNumber numberWithDouble:self.lat], [NSNumber numberWithDouble:self.lon], [NSString stringWithString:self.name], [NSString stringWithString:self.address], [NSString stringWithString:self.category]];
     
     
-    NSDictionary * rpcDict = @{@"jsonrpc":@"2.0",  @"method":@"", @"params":parms, @"id":ID};
+    NSDictionary * rpcDict = @{@"lat":[NSNumber numberWithDouble:self.lat], @"lon":[NSNumber numberWithDouble:self.lon], @"ele":[NSNumber numberWithDouble:0.0] ,@"name":[NSString stringWithString:self.name], @"address":[NSString stringWithString:self.address], @"category":[NSString stringWithString:self.category]};
+    
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:rpcDict
                         //options:NSJSONWritingPrettyPrinted
                                                        options:0
                                                          error:&error];
+    NSLog(@"jsonData: %@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
     
     return jsonData;
     

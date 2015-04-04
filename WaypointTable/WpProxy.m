@@ -53,8 +53,6 @@ static int iden = 1;
 
 
 
-
-
 //to reset Waypoints with JSON RPC
 - (BOOL) resetWaypoints {
     BOOL ret = NO;
@@ -88,12 +86,38 @@ static int iden = 1;
     return ret;
 }
 
+//add new waypoint with JSON RPC params
+- (BOOL) add: (double) lat lon: (double) lon  name: (NSString *) name address: (NSString *) address category:(NSString *) category{
+    BOOL ret = NO;
+    
+    // NSArray * parms = @[[NSNumber numberWithDouble:lat], [NSNumber numberWithDouble:lon], [NSString stringWithString:name], [NSString stringWithString:address], [NSString stringWithString:category]];
+    
+    Waypoint * newWP = [[Waypoint alloc] initWithLat:lat lon:lon name:name address:address category:category];
+    
+    NSData * firstObj = [newWP toJson];
+    NSLog(@"Created first JSON objected");
+    if ([self dispatchCall: @"add" withParms: firstObj]) {
+        ret = YES;
+    }
+    
+    
+    return ret;
+}
+
+
+
+
 
 //to get the Waypoint with JSON RPC params
 - (BOOL) get: (NSString *) name {
     BOOL ret = NO;
-    NSArray * parms = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
-    if ([self dispatchCall: @"get" withParms: parms]) {
+   // NSArray * parms = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+    Waypoint * newWP = [[Waypoint alloc] initWithLat:0.0 lon:0.0 name:name address:@"" category:@""];
+    
+    NSData * firstObj = [newWP toJson];
+    
+    
+    if ([self dispatchCall: @"get" withParms: firstObj]) {
         ret = YES;
     }
     return ret;
@@ -166,39 +190,44 @@ static int iden = 1;
     return ret;
 }
 
-//add new waypoint with JSON RPC params
-- (BOOL) add: (double) lat lon: (double) lon  name: (NSString *) name address: (NSString *) address category:(NSString *) category{
-    BOOL ret = NO;
-    
-    NSArray * parms = @[[NSNumber numberWithDouble:lat], [NSNumber numberWithDouble:lon], [NSString stringWithString:name], [NSString stringWithString:address], [NSString stringWithString:category]];
-    
-     Waypoint * newWP = [[Waypoint alloc] initWithLat:lat lon:lon name:name address:address category:category];
-  
-    NSData * firstObj = [newWP toJson];
-    
-    if ([self dispatchCall: @"add" withParms: parms]) {
-        ret = YES;
-    }
-    
-    
-        ret = YES;
-    }
-    return ret;
-}
 
 
 
 // called by the math methods to package call, convert to json, and send request to server.
-- (BOOL) dispatchCall: (NSString*) method withParms: (NSArray*) parms{
+- (BOOL) dispatchCall: (NSString*) method withParms: (NSData*) parms{
     BOOL ret = NO;
-    NSNumber * ID = [NSNumber numberWithInt:iden++];
-    NSDictionary * rpcDict = @{@"jsonrpc":@"2.0",  @"method":method, @"params":parms, @"id":ID};
     NSError *error;
+    
+    
+     NSLog(@"jsonData in dispatch: %@",[[NSString alloc] initWithData:parms encoding:NSUTF8StringEncoding]);
+    
+    
+    
+    NSDictionary* json = [NSJSONSerialization
+                          JSONObjectWithData:parms
+                          options:kNilOptions
+                          error:&error];
+    
+    
+    
+    
+    
+    NSMutableArray * JSONObjectparam = [[NSMutableArray alloc] init];
+    
+    [JSONObjectparam addObject:json];
+    
+    NSNumber * ID = [NSNumber numberWithInt:iden++];
+    NSDictionary * rpcDict = @{@"jsonrpc":@"2.0",  @"method":method, @"params":JSONObjectparam, @"id":ID};
+    
+    NSLog(@"Just before creation of second JSON object");
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:rpcDict
-                        //options:NSJSONWritingPrettyPrinted
+                   //      options:NSJSONWritingPrettyPrinted
                                                        options:0
                                                          error:&error];
-    NSLog(@"jsonData: %@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
+ //   NSLog(@"jsonData: %@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
+     NSLog(@"Created second JSON objected");
+    
+    
     self.receivedData = [NSMutableData data];
     NSURL *url = [NSURL URLWithString:self.urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];

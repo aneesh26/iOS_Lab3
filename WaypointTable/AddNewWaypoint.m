@@ -102,7 +102,7 @@
         //calling add method in wpProxy, which instead creates a JSON object
         [wpP add:newLat lon:newLon name:newName address:newAddr category:newCat];
         
-        
+        [wpP get:newName];
         
         //-----end of call
     
