@@ -55,4 +55,7 @@ typedef enum : NSInteger {
 // initial true heading for the great circle route. heading changes continuously.
 - (double) bearingGCInitTo: (double) lat lon: (double) lon;
 
+
+- (NSData *) toJson;
+
 @end

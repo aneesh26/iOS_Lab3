@@ -99,20 +99,8 @@
         WpProxy * wpP = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
         
         
-        [wpP ]
-        
-        double left = [self.leftTF.text doubleValue];
-        double right = [self.rightTF.text doubleValue];
-        NSString*oper = self.methodTF.text;
-        if([@"add" isEqualToString:oper]){
-            [calc add: left to: right];
-        }else if([@"subtract" isEqualToString:oper]){
-            [calc subtract: left by: right];
-        }else if([@"multiply" isEqualToString:oper]){
-            [calc multiply: left times: right];
-        }else if([@"divide" isEqualToString:oper]){
-            [calc divide: left by: right];
-        }
+        //calling add method in wpProxy, which instead creates a JSON object
+        [wpP add:newLat lon:newLon name:newName address:newAddr category:newCat];
         
         
         
@@ -126,6 +114,14 @@
     }
 }
 
+
+- (void) callResult:(NSNumber*) result {
+    double res = [result doubleValue];
+    NSLog([NSString stringWithFormat:@"%f",res ]);
+    
+  //  self.resultTF.text=[NSString stringWithFormat:@"%6.2f", res];
+    //NSLog(@"call returned: %@",result);
+}
 
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

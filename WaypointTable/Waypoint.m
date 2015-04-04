@@ -82,4 +82,42 @@
     return radians * (180.0 / M_PI);
 }
 
+- (NSData *) toJson{
+   
+    NSNumber * ID = [NSNumber numberWithInt:1];
+    
+    NSArray * parms = @[[NSNumber numberWithDouble:self.lat], [NSNumber numberWithDouble:self.lon], [NSString stringWithString:self.name], [NSString stringWithString:self.address], [NSString stringWithString:self.category]];
+    
+    
+    NSDictionary * rpcDict = @{@"jsonrpc":@"2.0",  @"method":@"", @"params":parms, @"id":ID};
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:rpcDict
+                        //options:NSJSONWritingPrettyPrinted
+                                                       options:0
+                                                         error:&error];
+    
+    return jsonData;
+    
+    
+}
+
+/* Reference Java code to create JSON object
+
+public JSONObject toJson(){
+    JSONObject obj = new JSONObject();
+    try{
+        obj.put("lat",new Double(lat));
+        obj.put("lon",new Double(lon));
+        obj.put("ele",new Double(ele));
+        obj.put("name",name);
+        obj.put("address",address);
+        obj.put("category",category);
+    }catch(Exception ex){
+        System.out.println("Exception: "+ex.getMessage());
+    }
+    return obj;
+}
+
+*/
+
 @end

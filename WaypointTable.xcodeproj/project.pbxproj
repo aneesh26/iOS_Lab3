@@ -18,6 +18,7 @@
 		DD1A291B1AC922DF00C76417 /* WaypointTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1A291A1AC922DF00C76417 /* WaypointTableViewController.m */; };
 		DD1A291E1AC9343600C76417 /* WaypointLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1A291D1AC9343600C76417 /* WaypointLibrary.m */; };
 		DD1A29211AC94EB500C76417 /* AddNewWaypoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1A29201AC94EB500C76417 /* AddNewWaypoint.m */; };
+		DD730CAD1ACFCA70005447A5 /* server.plist in Resources */ = {isa = PBXBuildFile; fileRef = DD730CAC1ACFCA70005447A5 /* server.plist */; };
 		DD8092C71ACE70A400632C93 /* WpProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8092C61ACE70A400632C93 /* WpProxy.m */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		DD1A291D1AC9343600C76417 /* WaypointLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaypointLibrary.m; sourceTree = "<group>"; };
 		DD1A291F1AC94EB500C76417 /* AddNewWaypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddNewWaypoint.h; sourceTree = "<group>"; };
 		DD1A29201AC94EB500C76417 /* AddNewWaypoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddNewWaypoint.m; sourceTree = "<group>"; };
+		DD730CAC1ACFCA70005447A5 /* server.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = server.plist; sourceTree = "<group>"; };
 		DD8092C51ACE70A400632C93 /* WpProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WpProxy.h; sourceTree = "<group>"; };
 		DD8092C61ACE70A400632C93 /* WpProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WpProxy.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,6 +116,7 @@
 				DD1A29201AC94EB500C76417 /* AddNewWaypoint.m */,
 				DD8092C51ACE70A400632C93 /* WpProxy.h */,
 				DD8092C61ACE70A400632C93 /* WpProxy.m */,
+				DD730CAC1ACFCA70005447A5 /* server.plist */,
 			);
 			path = WaypointTable;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD1A28FC1AC9195300C76417 /* Main.storyboard in Resources */,
+				DD730CAD1ACFCA70005447A5 /* server.plist in Resources */,
 				DD1A29011AC9195300C76417 /* LaunchScreen.xib in Resources */,
 				DD1A28FE1AC9195300C76417 /* Images.xcassets in Resources */,
 			);

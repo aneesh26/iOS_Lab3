@@ -21,6 +21,7 @@
  * @version March 29, 2015
  */
 #import "WpProxy.h"
+#import "Waypoint.h"
 
 
 
@@ -41,7 +42,7 @@ static int iden = 1;
     if( self = [super init] ){
         self.target = target;
         self.action = action;
-        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Server_URL" ofType:@"plist"];
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"server" ofType:@"plist"];
         NSDictionary * serverDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
         self.urlString = [serverDictionary objectForKey:@"server_url"];
         //NSLog(@"server url in plist is: %@",[serverDictionary objectForKey:@"server_url"]);
@@ -53,15 +54,6 @@ static int iden = 1;
 
 
 
-//add new waypoint with JSON RPC params
-- (BOOL) add: (double) lat lon: (double) lon  name: (NSString *) name address: (NSString *) address category:(NSString *) category{
-    BOOL ret = NO;
-    NSArray * parms = @[[NSNumber numberWithDouble:lat], [NSNumber numberWithDouble:lon], [NSString stringWithString:name], [NSString stringWithString:address], [NSString stringWithString:category]];
-    if ([self dispatchCall: @"add" withParms: parms]) {
-        ret = YES;
-    }
-    return ret;
-}
 
 //to reset Waypoints with JSON RPC
 - (BOOL) resetWaypoints {
@@ -146,11 +138,12 @@ static int iden = 1;
 
 
 //distanceGCTo new waypoint with JSON RPC params
-- (BOOL) distanceGCTo: (double) lat1 lon1: (double) lon1  name1: (NSString *) name1 address1: (NSString *) address1 category1:(NSString *) category1  lat2:(double) lat2 lon2: (double) lon2  name2: (NSString *) name2 address2: (NSString *) address2 category2:(NSString *) category2 {
+- (BOOL) distanceGCTo: (NSString *) name1 name2: (NSString *) name2  {
     BOOL ret = NO;
-    NSArray * parms1 = @[[NSNumber numberWithDouble:lat1], [NSNumber numberWithDouble:lon1], [NSString stringWithString:name1], [NSString stringWithString:address1], [NSString stringWithString:category1]];
-    NSArray * parms2 = @[[NSNumber numberWithDouble:lat2], [NSNumber numberWithDouble:lon2], [NSString stringWithString:name2], [NSString stringWithString:address2], [NSString stringWithString:category2]];
     
+    NSArray * parms1 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name1], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+    NSArray * parms2 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name2], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+   
     NSArray * parms = @[parms1 , parms2 ];
     if ([self dispatchCall: @"distanceGCTo" withParms: parms]) {
         ret = YES;
@@ -160,13 +153,34 @@ static int iden = 1;
 
 
 //bearingGCInitTo new waypoint with JSON RPC params
-- (BOOL) bearingGCInitTo: (double) lat1 lon1: (double) lon1  name1: (NSString *) name1 address1: (NSString *) address1 category1:(NSString *) category1  lat2:(double) lat2 lon2: (double) lon2  name2: (NSString *) name2 address2: (NSString *) address2 category2:(NSString *) category2 {
+- (BOOL) bearingGCInitTo: (NSString *) name1 name2: (NSString *) name2  {
     BOOL ret = NO;
-    NSArray * parms1 = @[[NSNumber numberWithDouble:lat1], [NSNumber numberWithDouble:lon1], [NSString stringWithString:name1], [NSString stringWithString:address1], [NSString stringWithString:category1]];
-    NSArray * parms2 = @[[NSNumber numberWithDouble:lat2], [NSNumber numberWithDouble:lon2], [NSString stringWithString:name2], [NSString stringWithString:address2], [NSString stringWithString:category2]];
+    
+    NSArray * parms1 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name1], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+    NSArray * parms2 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name2], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
     
     NSArray * parms = @[parms1 , parms2 ];
     if ([self dispatchCall: @"bearingGCInitTo" withParms: parms]) {
+        ret = YES;
+    }
+    return ret;
+}
+
+//add new waypoint with JSON RPC params
+- (BOOL) add: (double) lat lon: (double) lon  name: (NSString *) name address: (NSString *) address category:(NSString *) category{
+    BOOL ret = NO;
+    
+    NSArray * parms = @[[NSNumber numberWithDouble:lat], [NSNumber numberWithDouble:lon], [NSString stringWithString:name], [NSString stringWithString:address], [NSString stringWithString:category]];
+    
+     Waypoint * newWP = [[Waypoint alloc] initWithLat:lat lon:lon name:name address:address category:category];
+  
+    NSData * firstObj = [newWP toJson];
+    
+    if ([self dispatchCall: @"add" withParms: parms]) {
+        ret = YES;
+    }
+    
+    
         ret = YES;
     }
     return ret;
