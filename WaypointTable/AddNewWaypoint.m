@@ -33,6 +33,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *addCat;
 @property (weak, nonatomic) IBOutlet UITextField *addAddr;
 
+@property (strong, nonatomic) NSString * NewWpName;
+
 
 
 @end
@@ -95,6 +97,7 @@
     
         
         // ------adding a new waypoint here
+        self.NewWpName = newName;
         
         WpProxy * wpP = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
         
@@ -102,9 +105,9 @@
         //calling add method in wpProxy, which instead creates a JSON object
         [wpP add:newLat lon:newLon name:newName address:newAddr category:newCat];
         
-        [wpP get:newName];
+    //    [wpP get:newName];
         
-        [wpP getNames];
+      //  [wpP getNames];
         
         //-----end of call
     
@@ -118,11 +121,15 @@
 
 
 - (void) callResult:(NSNumber*) result {
-    double res = [result doubleValue];
-    NSLog([NSString stringWithFormat:@"%f",res ]);
+    
+    
+    [self.wpList addObject:self.NewWpName];
+   // double res = [result doubleValue];
+   // NSLog([NSString stringWithFormat:@"%f",res ]);
     
   //  self.resultTF.text=[NSString stringWithFormat:@"%6.2f", res];
     //NSLog(@"call returned: %@",result);
+    
 }
 
 

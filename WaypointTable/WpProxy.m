@@ -68,8 +68,14 @@ static int iden = 1;
 //to remove the Waypoint with JSON RPC params
 - (BOOL) remove: (NSString *) name {
     BOOL ret = NO;
-    NSArray * parms = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
-    if ([self dispatchCall: @"remove" withParms: parms]) {
+   // NSArray * parms = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+    
+    Waypoint * newWP = [[Waypoint alloc] initWithLat:0.0 lon:0.0 name:name address:@"" category:@""];
+    
+    NSData * firstObj = [newWP toJson];
+
+    
+    if ([self dispatchCall: @"remove" withParms: firstObj]) {
         ret = YES;
     }
     return ret;
@@ -138,7 +144,9 @@ static int iden = 1;
     return ret;
 }
 
-
+- (NSMutableData * ) returnGetNames{
+    return self.receivedData;
+}
 
 
 //to getCategoryNames Waypoints with JSON RPC

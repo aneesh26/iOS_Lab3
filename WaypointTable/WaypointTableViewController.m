@@ -22,12 +22,19 @@
 #import "WaypointTableViewController.h"
 #import "Waypoint.h"
 #import "ViewController.h"
+#import "WpProxy.h"
 
 
 @interface WaypointTableViewController ()
 @property (strong, nonatomic) IBOutlet UITableView *wptTableView;
 
 @property (strong, nonatomic) NSMutableDictionary * wpLib;
+@property (strong, nonatomic) NSMutableData * receivedData;
+@property (strong, nonatomic) WpProxy * getNamesProxy;
+@property (strong, nonatomic) NSMutableArray * waypointList;
+
+
+
 
 @end
 
@@ -46,6 +53,20 @@
     Waypoint * paris = [[Waypoint alloc] initWithLat:48.8567 lon:2.3508 name:@"Paris" address:@"The Lourve, Paris" category:@"Muesuem"];
     Waypoint * moscow = [[Waypoint alloc] initWithLat:55.75 lon:37.6167 name:@"Moscow" address:@"The Red Square" category:@"Mueseum"];
     
+    
+    
+    self.getNamesProxy = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
+    
+   [self.getNamesProxy getNames];
+    
+    
+ //   NSDictionary *myDict = [NSPropertyListSerialization propertyListFromData:receivedData mutabilityOption:NSPropertyListImmutable format:nil errorDescription:nil];
+
+    
+   // for(id key in myDict)
+    //    NSLog(@"key=%@ value=%@", key, [myDict objectForKey:key]);
+    
+    
     self.wpLib = [[NSMutableDictionary alloc] init];
     
     [self.wpLib setObject:ny forKey:@"New-York"];
@@ -61,6 +82,35 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+
+- (void) callResult:(NSNumber*) result {
+    double res = [result doubleValue];
+ //   NSLog(@"Completed getting data from the server for getNames");
+    
+ //   NSLog([NSString stringWithFormat:@"%f",res ]);
+    
+    self.receivedData = [self.getNamesProxy returnGetNames];
+    
+    NSLog(@"Getnames result: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+    
+   
+    NSError* error;
+    NSDictionary* json = [NSJSONSerialization
+                          JSONObjectWithData:self.receivedData
+                          options:NSJSONReadingMutableContainers
+                          error:&error];
+    
+    self.waypointList = [json objectForKey:@"result"];
+    
+    NSLog(@"Names: %@", self.waypointList);
+    
+    
+    [self.wptTableView reloadData];
+    
+    //  self.resultTF.text=[NSString stringWithFormat:@"%6.2f", res];
+    //NSLog(@"call returned: %@",result);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -82,7 +132,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return [[self.wpLib allKeys] count];
+    
+    return [self.waypointList count];
+ //   return [[self.wpLib allKeys] count];
+    
 }
 
 
@@ -93,7 +146,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
     
-    NSArray *keys = [self.wpLib allKeys];
+    NSArray *keys = self.waypointList;
+    NSLog(@"Keys: %@",keys);
+
     NSString * ret = @"unknown";
     
     if(indexPath.row < keys.count){
@@ -153,7 +208,9 @@
     
     if([segue.identifier isEqualToString:@"waypointDetails"]){
         NSIndexPath * indexPath = [self.tableView indexPathForSelectedRow];
-        NSArray * keys = [self.wpLib allKeys];
+       // NSArray * keys = [self.wpLib allKeys];
+        
+        NSArray * keys = self.waypointList;
         NSString * ret  =@"Unknown";
         if(indexPath.row < keys.count){
             ret = keys[indexPath.row];
@@ -162,12 +219,15 @@
         ViewController * destViewController = segue.destinationViewController;
         destViewController.waypointName = ret;
         destViewController.wpLib = self.wpLib;
+        destViewController.wpList = self.waypointList;
     }
     
     else if([segue.identifier isEqualToString:@"addWaypoint"]){
         ViewController * destViewController = segue.destinationViewController;
         //destViewController.waypointName = ret;
         destViewController.wpLib = self.wpLib;
+        destViewController.wpList = self.waypointList;
+        
     }
     
     

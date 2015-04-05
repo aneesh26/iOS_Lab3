@@ -30,6 +30,7 @@
 
 @property (strong, nonatomic) NSString * waypointName;
 @property (strong, nonatomic) NSMutableDictionary * wpLib;
+@property (strong, nonatomic) NSMutableArray * wpList;
 
 @end
 

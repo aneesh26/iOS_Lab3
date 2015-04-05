@@ -22,6 +22,7 @@
 
 #import "ViewController.h"
 #import "Waypoint.h"
+#import "WpProxy.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *latTV;
@@ -35,6 +36,10 @@
 @property (strong, nonatomic) UIPickerView * namePicker;
 @property (strong, nonatomic) UIPickerView * toPicker;
 
+@property (strong, nonatomic) WpProxy * getProxy;
+@property (strong, nonatomic) NSMutableData * receivedData;
+
+@property (nonatomic, assign) BOOL * removeFlag;
 
 
 @end
@@ -53,14 +58,20 @@
     
     self.navigationItem.rightBarButtonItems = @[btnSave,btnDel];
     
-    Waypoint * wpObject = [self.wpLib objectForKey:self.waypointName];
+    
+    self.getProxy = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
+    
+    [self.getProxy get:self.waypointName];
+    
+    
+ /*   Waypoint * wpObject = [self.wpLib objectForKey:self.waypointName];
     [self.latTV setText:[NSString stringWithFormat:@"%4f",[wpObject lat]]];
     [self.lonTV setText:[NSString stringWithFormat:@"%4f",[wpObject lon]]];
     [self.nameTV setText:[wpObject name]];
     [self.addrTV setText:[wpObject address]];
     [self.catTV setText:[wpObject category]];
     
-    
+   */
     
     self.latTV.keyboardType = UIKeyboardTypeDecimalPad;
     self.lonTV.keyboardType = UIKeyboardTypeDecimalPad;
@@ -87,6 +98,69 @@
     
     // Do any additional setup after loading the view, typically from a nib.
 }
+
+
+
+- (void) callResult:(NSNumber*) result {
+    double res = [result doubleValue];
+  //  NSLog(@"Completed getting data from the server for getNames");
+    
+   // NSLog([NSString stringWithFormat:@"%f",res ]);
+    
+    if(self.removeFlag == YES){
+        if( [self.wpList containsObject:self.waypointName]){
+            
+            [self.wpList removeObject:self.waypointName];
+        }
+        
+        
+        [self.namePicker reloadAllComponents];
+        [self.toPicker reloadAllComponents];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Waypoint Removed" message:[[@"Waypoint '" stringByAppendingString:self.waypointName] stringByAppendingString:@"' removed."] delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
+        // optional - add more buttons:
+        [alert addButtonWithTitle:@"OK"];
+        [alert show];
+        
+        
+    }else{
+    
+    self.receivedData = [self.getProxy returnGetNames];
+    
+    NSLog(@"Getnames result: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+    
+    
+    NSError* error;
+    NSDictionary* json = [NSJSONSerialization
+                          JSONObjectWithData:self.receivedData
+                          options:NSJSONReadingMutableContainers
+                          error:&error];
+    [self.nameTV setText:self.waypointName];
+    
+    //NSLog(@"Lat: %@",[[json objectForKey:@"result"] objectForKey:@"lat"]);
+    [self.latTV setText: [NSString stringWithFormat:@"%.4f",[[[json objectForKey:@"result"] objectForKey:@"lat"] doubleValue] ]];
+    [self.lonTV setText: [NSString stringWithFormat:@"%.4f",[[[json objectForKey:@"result"] objectForKey:@"lon"] doubleValue] ]];
+    [self.catTV setText: [NSString stringWithFormat:@"%@",[[json objectForKey:@"result"] objectForKey:@"category"] ]];
+     [self.addrTV setText: [NSString stringWithFormat:@"%@",[[json objectForKey:@"result"] objectForKey:@"address"] ]];
+    
+    
+    //self.
+    
+    NSLog(@"JSON data: %@", json);
+    }
+    
+  /*
+    if(self.wpList containsObject:self.waypointName){
+        [self.wpList removeObject:self.waypointName];
+    }
+    
+*/
+    
+    //  self.resultTF.text=[NSString stringWithFormat:@"%6.2f", res];
+    //NSLog(@"call returned: %@",result);
+}
+
+
 - (void)delClicked:(id) sender{
    // NSLog(@"Delete Clicked");
     
@@ -146,18 +220,27 @@
         }
         else if([buttonText isEqualToString:@"YES"])
         {
+            self.removeFlag = YES;
             NSString * temp = self.nameTV.text;
             
-             [self.wpLib removeObjectForKey:self.nameTV.text];
+            self.getProxy = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
             
-            [self.namePicker reloadAllComponents];
+            [self.getProxy remove:self.waypointName];
+            
+            
+            
+            
+            
+           //  [self.wpLib removeObjectForKey:self.nameTV.text];
+            
+          /*  [self.namePicker reloadAllComponents];
             [self.toPicker reloadAllComponents];
             
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Waypoint Removed" message:[[@"Waypoint '" stringByAppendingString:temp] stringByAppendingString:@"' removed."] delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
             // optional - add more buttons:
             [alert addButtonWithTitle:@"OK"];
             [alert show];
-            
+           */
             
         }
         

@@ -33,6 +33,8 @@
 
 - (BOOL) bearingGCInitTo: (NSString *) name1 name2: (NSString *) name2;
 
+- (NSMutableData *) returnGetNames;
+
 
 
 
