@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Tim Lindquist,
+ * Copyright 2015 Tim Lindquist, Aneesh Shastry
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * <p/>
- * Purpose: A sample Objective-C command line program to manipulate waypoints
+ * Purpose: A sample Objective-C command line program to manipulate waypoints using JSON RPC
  *
  * @author Tim Lindquist Tim.Lindquist@asu.edu
  *         Software Engineering, CIDSE, IAFSE, Arizona State University Polytechnic
- * @version March 12, 2015
+ *         Aneesh Shastry ashastry@asu.edu
+ *         MS Computer Science, CIDSE, IAFSE, Arizona State University
+ *
+ * @version April 5, 2015
  */
+
+
 
 #import "Waypoint.h"
 
@@ -96,7 +101,7 @@
                         //options:NSJSONWritingPrettyPrinted
                                                        options:0
                                                          error:&error];
-    NSLog(@"jsonData: %@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
+   // NSLog(@"jsonData: %@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
     
     return jsonData;
     

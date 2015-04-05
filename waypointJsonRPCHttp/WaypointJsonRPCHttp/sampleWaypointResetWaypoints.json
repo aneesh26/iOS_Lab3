@@ -1,1 +1,0 @@
-curl --data '{"jsonrpc":"2.0","method":"resetWaypoints","params":[],"id":3}' pooh.poly.asu.edu:10323

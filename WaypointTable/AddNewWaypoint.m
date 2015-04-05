@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * <p/>
- * Purpose: An iOS application to manipulate Waypoints using UItable
+ * Purpose: An iOS application to manipulate Waypoints using UItable and JSON RPC
  *
  * @author Aneesh Shastry ashastry@asu.edu
  *         MS Computer Science, CIDSE, IAFSE, Arizona State University
- * @version March 30, 2015
+ * @version April 5, 2015
  */
 
 
@@ -124,6 +124,7 @@
     
     
     [self.wpList addObject:self.NewWpName];
+//  self.wpList = [self.wpList sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
    // double res = [result doubleValue];
    // NSLog([NSString stringWithFormat:@"%f",res ]);
     

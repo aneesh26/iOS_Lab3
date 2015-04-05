@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * <p/>
- * Purpose: An iOS application to manipulate Waypoints using UItable
+ * Purpose: An iOS application to manipulate Waypoints using UItable and JSON RPC
  *
  * @author Aneesh Shastry ashastry@asu.edu
  *         MS Computer Science, CIDSE, IAFSE, Arizona State University
- * @version March 30, 2015
+ * @version April 5, 2015
  */
 
 #import "ViewController.h"
@@ -40,6 +40,16 @@
 @property (strong, nonatomic) NSMutableData * receivedData;
 
 @property (nonatomic, assign) BOOL * removeFlag;
+@property (nonatomic, assign) BOOL * modifyFlag;
+@property (nonatomic, assign) BOOL * modifyFlag2;
+@property (nonatomic, assign) BOOL * distanceFlag;
+@property (nonatomic, assign) BOOL * bearingFlag;
+
+@property (strong, nonatomic) Waypoint * modifyTemp;
+@property (nonatomic, assign) double  tempDist;
+
+
+
 
 
 @end
@@ -49,6 +59,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"View Waypoint";
+
     
     
    // UIBarButtonItem *btnDel = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash initWithTitle:@"Delete" style:UIBarButtonItemStylePlain target:self action:@selector(delClicked:)] ];
@@ -107,7 +118,7 @@
     
    // NSLog([NSString stringWithFormat:@"%f",res ]);
     
-    if(self.removeFlag == YES){
+    if(self.removeFlag == YES){ //  this block removes the waypoint on the click of delete button
         if( [self.wpList containsObject:self.waypointName]){
             
             [self.wpList removeObject:self.waypointName];
@@ -121,13 +132,76 @@
         // optional - add more buttons:
         [alert addButtonWithTitle:@"OK"];
         [alert show];
+        self.removeFlag = NO;
         
         
-    }else{
+    }else if(self.modifyFlag == YES){
+        if(self.modifyFlag2 == YES){// this block adds the new waypoint during the modification process
+             [self.wpList addObject:self.nameTV.text];
+         //   self.wpList = [self.wpList sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+            self.modifyFlag2 = NO;
+            self.modifyFlag = NO;
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{ //  this block removes he current waypoint during the modification process
+            
+        
+        [self.wpList removeObject:self.waypointName];
+        
+        // add the new waypoint
+        
+       
+        
+        WpProxy * wpP = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
+        
+            self.modifyFlag2 = YES;
+        //calling add method in wpProxy, which instead creates a JSON object
+        [wpP add:self.modifyTemp.lat lon:self.modifyTemp.lon name:self.modifyTemp.name address:self.modifyTemp.address category:self.modifyTemp.category];
+        
+        }
+        
+        
+    } else if(self.distanceFlag == YES){  //this block calculates the distance between the two waypoints
+     //   double tempDistance;
+        
+        
+        if(self.bearingFlag == YES){
+            
+            self.receivedData = [self.getProxy returnGetNames];
+            NSError* error;
+            NSDictionary* json = [NSJSONSerialization
+                                  JSONObjectWithData:self.receivedData
+                                  options:NSJSONReadingMutableContainers
+                                  error:&error];
+            
+            [self.distTV setText: [NSString stringWithFormat:@"%.2f bearing %.2f",self.tempDist,[[json objectForKey:@"result"]  doubleValue]]];
+            self.bearingFlag = NO;
+            self.distanceFlag = NO;
+            
+        }else{
+        self.receivedData = [self.getProxy returnGetNames];
+        
+        NSError* error;
+        NSDictionary* json = [NSJSONSerialization
+                              JSONObjectWithData:self.receivedData
+                              options:NSJSONReadingMutableContainers
+                              error:&error];
+        self.tempDist = [[json objectForKey:@"result"]  doubleValue];
+        
+        [self.distTV setText: [NSString stringWithFormat:@"%.2f",[[json objectForKey:@"result"]  doubleValue] ]];
+        self.bearingFlag = YES;
+        self.getProxy = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
+        
+        [self.getProxy bearingGCInitTo:self.waypointName name2:self.toTV.text];
+        
+        }
+        
+    }
+    else{ // this block loads the data when the Viewcontroller is called
     
     self.receivedData = [self.getProxy returnGetNames];
+        
     
-    NSLog(@"Getnames result: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+   // NSLog(@"Getnames result: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     
     
     NSError* error;
@@ -146,7 +220,7 @@
     
     //self.
     
-    NSLog(@"JSON data: %@", json);
+   // NSLog(@"JSON data: %@", json);
     }
     
   /*
@@ -191,13 +265,26 @@
     }else{
     
     
-    
+  /*
     Waypoint * newWP = [[Waypoint alloc] initWithLat:newLat lon:newLon name:newName address:newAddr category:newCat];
     
      [self.wpLib removeObjectForKey:self.waypointName];
-    
+        
+       
     [self.wpLib setObject:newWP forKey:newWP.name];
-    [self.navigationController popViewControllerAnimated:YES];
+    */
+        
+         Waypoint * newWP = [[Waypoint alloc] initWithLat:newLat lon:newLon name:newName address:newAddr category:newCat];
+        
+        self.modifyTemp = newWP;
+        
+        self.modifyFlag = YES;
+        
+    //First remove the current waypoint
+        self.getProxy = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
+        
+        [self.getProxy remove:self.waypointName];
+        
     }
     
 }
@@ -265,7 +352,7 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     
-    NSArray * keys = [self.wpLib allKeys];
+    NSArray * keys = self.wpList;
     if(row < keys.count){
         
         
@@ -273,16 +360,24 @@
             [self.toTV resignFirstResponder];
             // add code to handle the to picker - to populate the TO text field
             // to get the distance
-            NSArray * keys = [self.wpLib allKeys];
+        //    NSArray * keys = [self.wpLib allKeys];
+        //    NSArray * keys = self.wpList;
             [self.toTV setText:keys[row]];
             
+         
+            self.getProxy = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
+            self.distanceFlag = YES;
+            [self.getProxy distanceGCTo:self.waypointName name2:self.toTV.text];
+            
+            
+            
             //get name wp and to wp.. call the functions inside name wp with the to wp lat and lon
-            if(![self.nameTV.text isEqual:@""])
+         /*   if(![self.nameTV.text isEqual:@""])
             {
                 [self calculateDistance ];
             }
             
-            
+           */
             
         }else{
             [self.nameTV resignFirstResponder];
@@ -334,7 +429,10 @@
 }
 
 - (NSString*) pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
-    NSArray * keys = [self.wpLib allKeys];
+    //NSArray * keys = [self.wpLib allKeys];
+    NSArray * keys = self.wpList;
+    
+    
     NSString * returnString = @"Unknown Key";
     if(row < keys.count){
         returnString = keys[row];
@@ -344,7 +442,8 @@
 }
 
 - (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
-    return [self.wpLib allKeys].count;
+    //return [self.wpLib allKeys].count;
+    return [self.wpList count];
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField{

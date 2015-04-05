@@ -1,6 +1,6 @@
 
 /**
- * Copyright 2015 Tim Lindquist,
+ * Copyright 2015 Tim Lindquist, Aneesh Shastry
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@
  *
  * @author Tim Lindquist Tim.Lindquist@asu.edu
  *         Software Engineering, CIDSE, IAFSE, Arizona State University Polytechnic
- * @version March 29, 2015
+ *         Aneesh Shastry ashastry@asu.edu
+ *         MS Computer Science, CIDSE, IAFSE, Arizona State University
+ * @version April 5, 2015
  */
 #import "WpProxy.h"
 #import "Waypoint.h"
@@ -33,6 +35,8 @@ static int iden = 1;
 @property (strong, atomic) id target;
 @property (strong, atomic) NSMutableData * receivedData;
 @property (strong, nonatomic) NSString * urlString;
+@property (nonatomic, assign) BOOL * callFlag;
+
 
 @end
 
@@ -68,14 +72,21 @@ static int iden = 1;
 //to remove the Waypoint with JSON RPC params
 - (BOOL) remove: (NSString *) name {
     BOOL ret = NO;
+   // NSLog(@"Removing WP");
    // NSArray * parms = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
     
-    Waypoint * newWP = [[Waypoint alloc] initWithLat:0.0 lon:0.0 name:name address:@"" category:@""];
+ //   Waypoint * newWP = [[Waypoint alloc] initWithLat:0.0 lon:0.0 name:name address:@"" category:@""];
     
-    NSData * firstObj = [newWP toJson];
+//    NSData * firstObj = [newWP toJson];
+    
+    NSArray * parms = @[name];
+    
+    
+    self.callFlag = YES;
+
 
     
-    if ([self dispatchCall: @"remove" withParms: firstObj]) {
+    if ([self dispatchCall: @"remove" withParms: parms]) {
         ret = YES;
     }
     return ret;
@@ -95,13 +106,13 @@ static int iden = 1;
 //add new waypoint with JSON RPC params
 - (BOOL) add: (double) lat lon: (double) lon  name: (NSString *) name address: (NSString *) address category:(NSString *) category{
     BOOL ret = NO;
-    
+  //  NSLog(@"Adding a new WP");
     // NSArray * parms = @[[NSNumber numberWithDouble:lat], [NSNumber numberWithDouble:lon], [NSString stringWithString:name], [NSString stringWithString:address], [NSString stringWithString:category]];
     
     Waypoint * newWP = [[Waypoint alloc] initWithLat:lat lon:lon name:name address:address category:category];
     
     NSData * firstObj = [newWP toJson];
-    NSLog(@"Created first JSON objected");
+  //  NSLog(@"Created first JSON objected");
     if ([self dispatchCall: @"add" withParms: firstObj]) {
         ret = YES;
     }
@@ -118,12 +129,16 @@ static int iden = 1;
 - (BOOL) get: (NSString *) name {
     BOOL ret = NO;
    // NSArray * parms = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
-    Waypoint * newWP = [[Waypoint alloc] initWithLat:0.0 lon:0.0 name:name address:@"" category:@""];
+   // Waypoint * newWP = [[Waypoint alloc] initWithLat:0.0 lon:0.0 name:name address:@"" category:@""];
     
-    NSData * firstObj = [newWP toJson];
+   // NSData * firstObj = [newWP toJson];
+    
+    NSArray * parms = @[name];
     
     
-    if ([self dispatchCall: @"get" withParms: firstObj]) {
+    self.callFlag = YES;
+    
+    if ([self dispatchCall: @"get" withParms: parms]) {
         ret = YES;
     }
     return ret;
@@ -178,10 +193,19 @@ static int iden = 1;
 - (BOOL) distanceGCTo: (NSString *) name1 name2: (NSString *) name2  {
     BOOL ret = NO;
     
-    NSArray * parms1 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name1], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
-    NSArray * parms2 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name2], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+  //  NSArray * parms1 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name1], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+   // NSArray * parms2 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name2], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+ //    NSDictionary * rpcDict = @{@"wp1":[NSString stringWithString:name1], @"wp2":[NSString stringWithString:name2]};
+  //  NSError *error;
+ //   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:rpcDict
+                        //options:NSJSONWritingPrettyPrinted
+                                          //             options:0
+                                           //              error:&error];
+  
+    NSArray * parms = @[name1, name2];
    
-    NSArray * parms = @[parms1 , parms2 ];
+    
+    self.callFlag = YES;
     if ([self dispatchCall: @"distanceGCTo" withParms: parms]) {
         ret = YES;
     }
@@ -193,11 +217,14 @@ static int iden = 1;
 - (BOOL) bearingGCInitTo: (NSString *) name1 name2: (NSString *) name2  {
     BOOL ret = NO;
     
-    NSArray * parms1 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name1], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
-    NSArray * parms2 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name2], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+  //  NSArray * parms1 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name1], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+  //  NSArray * parms2 = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithString:name2], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
     
-    NSArray * parms = @[parms1 , parms2 ];
-    if ([self dispatchCall: @"bearingGCInitTo" withParms: parms]) {
+    NSArray * parms = @[name1, name2];
+    
+    
+    self.callFlag = YES;
+  if ([self dispatchCall: @"bearingGCInitTo" withParms: parms]) {
         ret = YES;
     }
     return ret;
@@ -209,36 +236,54 @@ static int iden = 1;
 // called by the math methods to package call, convert to json, and send request to server.
 - (BOOL) dispatchCall: (NSString*) method withParms: (NSData*) parms{
     BOOL ret = NO;
+    
+    
+    
     NSError *error;
     
-    
-     NSLog(@"jsonData in dispatch: %@",[[NSString alloc] initWithData:parms encoding:NSUTF8StringEncoding]);
-    
+
     
     
-    NSDictionary* json = [NSJSONSerialization
-                          JSONObjectWithData:parms
-                          options:kNilOptions
-                          error:&error];
+   //  NSLog(@"jsonData in dispatch: %@",[[NSString alloc] initWithData:parms encoding:NSUTF8StringEncoding]);
     
     
+  
+      NSNumber * ID = [NSNumber numberWithInt:iden++];
+    NSDictionary * rpcDict;
+   
+    if(self.callFlag == YES){
+        
+        rpcDict  = @{@"jsonrpc":@"2.0",  @"method":method, @"params":parms, @"id":ID};
+        self.callFlag = NO;
+    }
+    else{
+        NSDictionary* json = [NSJSONSerialization
+                              JSONObjectWithData:parms
+                              options:kNilOptions
+                              error:&error];
+        
+        
+        
+        
+        
+        NSMutableArray * JSONObjectparam = [[NSMutableArray alloc] init];
+        
+        [JSONObjectparam addObject:json];
+
+        rpcDict = @{@"jsonrpc":@"2.0",  @"method":method, @"params":JSONObjectparam, @"id":ID};
+    }
     
     
+  
+   // NSDictionary * rpcDict = @{@"jsonrpc":@"2.0",  @"method":method, @"params":JSONObjectparam, @"id":ID};
     
-    NSMutableArray * JSONObjectparam = [[NSMutableArray alloc] init];
-    
-    [JSONObjectparam addObject:json];
-    
-    NSNumber * ID = [NSNumber numberWithInt:iden++];
-    NSDictionary * rpcDict = @{@"jsonrpc":@"2.0",  @"method":method, @"params":JSONObjectparam, @"id":ID};
-    
-    NSLog(@"Just before creation of second JSON object");
+   // NSLog(@"Just before creation of second JSON object");
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:rpcDict
                    //      options:NSJSONWritingPrettyPrinted
                                                        options:0
                                                          error:&error];
  //   NSLog(@"jsonData: %@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
-     NSLog(@"Created second JSON objected");
+   //  NSLog(@"Created second JSON objected");
     
     
     self.receivedData = [NSMutableData data];
@@ -261,27 +306,27 @@ static int iden = 1;
 
 // May be called multiple times, such as a redirect, so reset the data.
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    NSLog(@"connection: didReceiveResponse");
+ //  NSLog(@"connection: didReceiveResponse");
 }
 
 //   Append the new data
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    NSLog(@"connection: didReceiveData:");
+  //  NSLog(@"connection: didReceiveData:");
     if(data){
         //NSLog(@"in didReceiveData and got %lu bytes: ",(unsigned long)data.length);
         [self.receivedData appendData:data];
     }else{
-        NSLog(@"in didReceiveData, but data is nil");
+      //  NSLog(@"in didReceiveData, but data is nil");
     }
 }
 
 // Connection has completed. De-serialize to nsdictionary and pick out result value.
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    NSLog(@"connectionDidFinishLoading");
+  //  NSLog(@"connectionDidFinishLoading");
     NSError *error;
     NSDictionary *myDictionary = @{@"result":@"no return value"};
     if(self.receivedData==nil){
-        NSLog(@"connectionDidFinishLoading with No data received");
+     //   NSLog(@"connectionDidFinishLoading with No data received");
     } else {
         NSLog(@"receivedData: %@",[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
         myDictionary = [NSJSONSerialization

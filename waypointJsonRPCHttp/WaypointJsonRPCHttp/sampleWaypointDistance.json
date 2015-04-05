@@ -1,1 +1,0 @@
-curl --data '{"jsonrpc":"2.0","method":"distanceGCTo","params":["ASU-Poly","New-York-NY"],"id":3}' localhost:8080

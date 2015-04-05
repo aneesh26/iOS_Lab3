@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * <p/>
- * Purpose: An iOS application to manipulate Waypoints using UItable
+ * Purpose: An iOS application to manipulate Waypoints using UItable and JSON RPC
  *
  * @author Aneesh Shastry ashastry@asu.edu
  *         MS Computer Science, CIDSE, IAFSE, Arizona State University
- * @version March 30, 2015
+ * @version April 5, 2015
  */
 #import "WaypointTableViewController.h"
 #import "Waypoint.h"
@@ -45,7 +45,7 @@
     
     self.wptTableView.dataSource = self;
 
-    
+    /*
     
     Waypoint * ny = [[Waypoint alloc] initWithLat:40.7127 lon:-74.0059 name:@"New-York" address:@"Central Perk, Manhattan" category:@"Restaurant"];
     Waypoint * asup = [[Waypoint alloc] initWithLat:33.3056 lon:-111.6788 name:@"ASUPoly" address:@"Peralta Hall" category:@"Classroom"];
@@ -53,7 +53,7 @@
     Waypoint * paris = [[Waypoint alloc] initWithLat:48.8567 lon:2.3508 name:@"Paris" address:@"The Lourve, Paris" category:@"Muesuem"];
     Waypoint * moscow = [[Waypoint alloc] initWithLat:55.75 lon:37.6167 name:@"Moscow" address:@"The Red Square" category:@"Mueseum"];
     
-    
+    */
     
     self.getNamesProxy = [[WpProxy alloc] initWithTarget:self action: @selector(callResult:)];
     
@@ -69,12 +69,12 @@
     
     self.wpLib = [[NSMutableDictionary alloc] init];
     
-    [self.wpLib setObject:ny forKey:@"New-York"];
+  /*  [self.wpLib setObject:ny forKey:@"New-York"];
     [self.wpLib setObject:asup forKey:@"ASUPoly"];
     [self.wpLib setObject:asub forKey:@"ASUBrickyard"];
     [self.wpLib setObject:paris forKey:@"Paris"];
     [self.wpLib setObject:moscow forKey:@"Moscow"];
-    
+    */
 
     
     // Uncomment the following line to preserve selection between presentations.
@@ -93,7 +93,7 @@
     
     self.receivedData = [self.getNamesProxy returnGetNames];
     
-    NSLog(@"Getnames result: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+  //  NSLog(@"Getnames result: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
     
    
     NSError* error;
@@ -104,9 +104,9 @@
     
     self.waypointList = [json objectForKey:@"result"];
     
-    NSLog(@"Names: %@", self.waypointList);
+  //  NSLog(@"Names: %@", self.waypointList);
     
-    
+ //   self.waypointList = [self.waypointList sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     [self.wptTableView reloadData];
     
     //  self.resultTF.text=[NSString stringWithFormat:@"%6.2f", res];
@@ -147,7 +147,7 @@
     }
     
     NSArray *keys = self.waypointList;
-    NSLog(@"Keys: %@",keys);
+  //  NSLog(@"Keys: %@",keys);
 
     NSString * ret = @"unknown";
     
@@ -227,7 +227,6 @@
         //destViewController.waypointName = ret;
         destViewController.wpLib = self.wpLib;
         destViewController.wpList = self.waypointList;
-        
     }
     
     

@@ -1,1 +1,0 @@
-curl --data '{"jsonrpc":"2.0","method":"add","params":[{"name":"tim","lat":25,"lon":-111,"address":"anywhere","category":"Travel","ele":5000}],"id":3}' localhost:8080

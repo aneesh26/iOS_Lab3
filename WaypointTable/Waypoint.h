@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * <p/>
- * Purpose: A sample Objective-C command line program to manipulate waypoints
+ * Purpose: A sample Objective-C command line program to manipulate waypoints using JSON RPC
  *
  * @author Tim Lindquist Tim.Lindquist@asu.edu
  *         Software Engineering, CIDSE, IAFSE, Arizona State University Polytechnic
