@@ -126,8 +126,13 @@ static int iden = 1;
 //to getNames Waypoints with JSON RPC
 - (BOOL) getNames {
     BOOL ret = NO;
-    NSArray * parms = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
-    if ([self dispatchCall: @"getNames" withParms: parms]) {
+  //  NSArray * parms = @[[NSNumber numberWithDouble:0.0], [NSNumber numberWithDouble:0.0], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""], [NSString stringWithFormat:@""]];
+    
+    Waypoint * newWP = [[Waypoint alloc] initWithLat:0.0 lon:0.0 name:@"" address:@"" category:@""];
+    
+    NSData * firstObj = [newWP toJson];
+
+    if ([self dispatchCall: @"getNames" withParms: firstObj]) {
         ret = YES;
     }
     return ret;

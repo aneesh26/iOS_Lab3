@@ -104,6 +104,8 @@
         
         [wpP get:newName];
         
+        [wpP getNames];
+        
         //-----end of call
     
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"New Waypoint" message:[NSString stringWithFormat:@"Waypoint '%@' added",self.addName.text] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];

@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<project name="JsonRPC Waypoint server and client in Java" default="targets">
+
+   <property name="src.dir" value="src"/>
+   <property name="lib.dir" value="lib"/>
+   <property name="classes.dir" value="classes"/>
+   <property name="host.name" value="127.0.0.1"/>
+   <property name="port.num" value="8080"/>
+   <property name="json.file.name" value="waypoints.json"/>
+   <property name="json.methods.file" value="waypointLibrary.json"/>
+   <property environment="env"/>
+   <property name="ostype" value="${env.OSTYPE}"/>
+
+   <target name="targets">
+      <echo message="base directory is: ${basedir}"/>
+      <echo
+       message="Targets are clean, prepare, generate.server.stub, build.server, build.client, build.java.client, build.java.server targets"/>
+      <echo
+       message="invoke java client with: java -cp classes:lib/org.json.20140503.jar cst420.jsonrpc.client.WaypointClient http://localhost:8080"/>
+   </target>
+
+   <path id="compile.classpath">
+      <pathelement location="${build}"/>
+      <fileset dir="${basedir}/lib">
+         <include name="json.jar"/>
+      </fileset>
+   </path>
+
+   <target name="clean">
+      <delete dir="${classes.dir}" failonerror="false"/>
+      <delete file="${lib.dir}/client.jar" failonerror="false"/>
+      <delete file="${lib.dir}/server.jar" failonerror="false"/>
+   </target>
+
+   <target name="prepare">
+      <mkdir dir="${classes.dir}"/>
+   </target>
+
+   <target name="build.all"
+           depends="clean,prepare,build.client,build.server,generate.jars"
+           description="Clean then build cpp server, cpp client and java client"/>
+
+  <target name="build.client" depends="prepare"
+          description="Compile Java client sources">
+     <!-- Compile Java classes as necessary -->
+     <echo message="invoke java client with: java -cp classes:lib/json.jar ser423.jsonrpc.WaypointServerStub http://127.0.0.1:8080"/>
+     <javac srcdir="${src.dir}/client"
+            destdir="${classes.dir}"
+            includeantruntime="false">
+        <classpath refid="compile.classpath"/>
+    </javac>
+  </target>
+
+  <target name="build.server" depends="prepare"
+          description="Compile Java server sources">
+     <echo message="invoke java server with: java -cp classes:lib/json.jar ser423.WaypointServer 8080"/>
+     <!-- Compile Java classes as necessary -->
+     <javac srcdir="${src.dir}/server"
+            destdir="${classes.dir}"
+            includeantruntime="false">
+        <classpath refid="compile.classpath"/>
+    </javac>
+  </target>
+
+  <target name="generate.jars" depends="build.server,build.client">
+    <jar destfile="${lib.dir}/waypoint.jar" >
+      <fileset dir="${classes.dir}" includes="ser423/LibrarySkeleton.class"/>
+      <fileset dir="${classes.dir}" includes="ser423/Waypoint.class"/>
+      <fileset dir="${classes.dir}" includes="ser423/WaypointLibrary.class"/>
+      <fileset dir="${classes.dir}" includes="ser423/WaypointLibraryImpl.class"/>
+      <fileset dir="${classes.dir}" includes="ser423/WaypointServer.class"/>
+    </jar>
+    <jar destfile="${lib.dir}/server.jar">
+      <zipgroupfileset dir="${lib.dir}" includes="json.jar,waypoint.jar"/>
+      <manifest>
+        <attribute name="Main-Class" value="ser423.WaypointServer"/>
+      </manifest>
+    </jar>
+    <delete file="${lib.dir}/waypoint.jar" failonerror="false"/>
+
+    <jar destfile="${lib.dir}/waypointclient.jar" >
+      <fileset dir="${classes.dir}" includes="ser423/jsonrpc/Waypoint.class"/>
+      <fileset dir="${classes.dir}" includes="ser423/jsonrpc/JsonRpcRequestViaHttp.class"/>
+      <fileset dir="${classes.dir}" includes="ser423/jsonrpc/WaypointServer.class"/>
+      <fileset dir="${classes.dir}" includes="ser423/jsonrpc/WaypointServerStub.class"/>
+    </jar>
+    <jar destfile="${lib.dir}/client.jar">
+      <zipgroupfileset dir="${lib.dir}" includes="json.jar,waypointclient.jar"/>
+      <manifest>
+        <attribute name="Main-Class" value="ser423.jsonrpc.WaypointServerStub"/>
+      </manifest>
+    </jar>
+    <delete file="${lib.dir}/waypointclient.jar" failonerror="false"/>
+    <echo message="Invoke server with: java -jar ${lib.dir}/server.jar 8080"/>
+    <echo message="Invoke client with: java -jar ${lib.dir}/client.jar http://localhost:8080"/>
+  </target>
+
+</project>
