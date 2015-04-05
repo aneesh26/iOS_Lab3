@@ -1,1 +1,0 @@
-{"jsonrpc": "2.0", "method": "calc.subtract", "params": [20.0, 10.0], "id": 3}

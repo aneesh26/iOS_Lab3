@@ -1,1 +1,0 @@
-curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"divide\",\"params\":[12.3, 37.7],\"id\":3}" localhost:8080
